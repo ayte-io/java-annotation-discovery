@@ -4,6 +4,7 @@
 
 # Maven artifacts
 target
+dependency-reduced-pom.xml
 
 # Maven Wrapper
 .mvn/wrapper/*

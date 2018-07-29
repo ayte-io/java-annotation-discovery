@@ -4,12 +4,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.ayte.lang</groupId>
-    <artifactId>annotation-discovery</artifactId>
+    <groupId>io.ayte.utility.discovery</groupId>
+    <artifactId>root</artifactId>
     <version>0.1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
-    <name>Annotation Discovery</name>
-    <url>https://github.com/ayte-labs/java-annotation-discovery</url>
+    <modules>
+        <module>src/infrastructure</module>
+        <module>src/libraries</module>
+        <module>src/test-infrastructure</module>
+    </modules>
+    <packaging>pom</packaging>
+    <name>Discovery</name>
+    <url>https://github.com/ayte-io/java-discovery</url>
 
     <inceptionYear>2018</inceptionYear>
     <licenses>
@@ -21,23 +26,242 @@
     </licenses>
     <organization>
         <name>Ayte Labs</name>
-        <url>https://github.com/ayte-labs</url>
+        <url>https://github.com/ayte-io</url>
     </organization>
 
     <issueManagement>
         <system>github</system>
-        <url>https://github.com/ayte-labs/java-annotation-discovery/issues</url>
+        <url>https://github.com/ayte-io/java-discovery/issues</url>
     </issueManagement>
 
     <scm>
-        <connection>scm:git:https://github.com/ayte-labs/java-annotation-discovery.git</connection>
+        <connection>scm:git:git@github.com:ayte-io/java-discovery.git</connection>
         <tag>HEAD</tag>
-        <url>https://github.com/ayte-labs/java-annotation-discovery</url>
+        <url>https://github.com/ayte-io/java-discovery</url>
     </scm>
+
+    <repositories>
+        <repository>
+            <id>sonatype</id>
+            <name>Sonatype</name>
+            <url>http://repository.sonatype.org/content/groups/public/</url>
+        </repository>
+    </repositories>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.core.version>3.5.4</maven.core.version>
+        <plugin-api.version>3.5.4</plugin-api.version>
+        <plugin-tools.version>3.5.2</plugin-tools.version>
+
+        <plugin.compiler.version>3.7.0</plugin.compiler.version>
+        <plugin.shade.version>3.1.1</plugin.shade.version>
+        <plugin.plugin.version>3.5.2</plugin.plugin.version>
+        <plugin.multi-release.version>0.1.5</plugin.multi-release.version>
+        <plugin.toolchain.version>1.1</plugin.toolchain.version>
+        <plugin.clover.version>4.2.1</plugin.clover.version>
+
+        <!-- compile-time deps -->
+        <lombok.version>1.18.0</lombok.version>
+        <auto-service.version>1.0-rc4</auto-service.version>
+
+        <!-- testing deps -->
+        <allure.version>2.6.0</allure.version>
+        <hamcrest.version>1.3</hamcrest.version>
+        <junit.jupiter.version>5.2.0</junit.jupiter.version>
+
+        <!-- shaded deps -->
+        <jackson.version>2.9.6</jackson.version>
+        <java-poet.version>1.11.1</java-poet.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- internal dependencies -->
+            <dependency>
+                <groupId>io.ayte.utility.discovery.infrastructure</groupId>
+                <artifactId>configuration</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.ayte.utility.discovery</groupId>
+                <artifactId>api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.ayte.utility.discovery</groupId>
+                <artifactId>annotation-processor</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- plugin build dependencies -->
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-plugin-api</artifactId>
+                <version>${plugin-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven.plugin-tools</groupId>
+                <artifactId>maven-plugin-annotations</artifactId>
+                <version>${plugin-tools.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-core</artifactId>
+                <version>${maven.core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.google.auto.service</groupId>
+                <artifactId>auto-service</artifactId>
+                <version>${auto-service.version}</version>
+                <optional>true</optional>
+                <scope>provided</scope>
+            </dependency>
+
+            <!-- annotation processor dependencies -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-yaml</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup</groupId>
+                <artifactId>javapoet</artifactId>
+                <version>${java-poet.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${plugin.compiler.version}</version>
+                    <configuration>
+                        <source>${maven.compiler.source}</source>
+                        <target>${maven.compiler.target}</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>${plugin.shade.version}</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>shade</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-plugin-plugin</artifactId>
+                    <version>${plugin.plugin.version}</version>
+                    <configuration>
+                        <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+                        <!-- no warnings please -->
+                        <packagingTypes>maven-plugin,pom</packagingTypes>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>generate-resources</phase>
+                            <goals>
+                                <goal>descriptor</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-toolchains-plugin</artifactId>
+                    <version>${plugin.toolchain.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>toolchain</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <toolchains>
+                            <jdk>
+                                <version>8</version>
+                            </jdk>
+                        </toolchains>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.openclover</groupId>
+                    <artifactId>clover-maven-plugin</artifactId>
+                    <version>${plugin.clover.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>io.ayte.utility.discovery.infrastucture</groupId>
+                    <artifactId>api-generator-plugin</artifactId>
+                    <version>${project.version}</version>
+                    <executions>
+                        <execution>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>generate</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>io.ayte.utility.discovery.infrastucture</groupId>
+                    <artifactId>processor-generator-plugin</artifactId>
+                    <version>${project.version}</version>
+                    <executions>
+                        <execution>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>generate</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>libraries</artifactId>
+        <groupId>io.ayte.utility.discovery</groupId>
+        <version>0.1.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>shaded-annotation-processor</artifactId>
+    <name>Discovery :: Libraries :: Shaded Annotation Processor</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.ayte.utility.discovery</groupId>
+            <artifactId>annotation-processor</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <configuration>
+                    <artifactSet>
+                        <excludes>
+                            <exclude>com.google.*</exclude>
+                            <exclude>javax.*</exclude>
+                            <exclude>afu.*</exclude>
+                            <exclude>org.checkerframework.*</exclude>
+                            <exclude>org.codehaus.*</exclude>
+                        </excludes>
+                    </artifactSet>
+                    <relocations>
+                        <relocation>
+                            <pattern>org.yaml</pattern>
+                            <shadedPattern>io.ayte.utility.discovery.shaded.org.yaml</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.fasterxml</pattern>
+                            <shadedPattern>io.ayte.utility.discovery.shaded.com.fasterxml</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.squareup</pattern>
+                            <shadedPattern>io.ayte.utility.discovery.shaded.com.squareup</shadedPattern>
+                        </relocation>
+                    </relocations>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
