@@ -33,6 +33,7 @@
                             <exclude>afu.*</exclude>
                             <exclude>org.checkerframework.*</exclude>
                             <exclude>org.codehaus.*</exclude>
+                            <exclude>groverconfig*</exclude>
                         </excludes>
                     </artifactSet>
                     <relocations>
@@ -49,6 +50,14 @@
                             <shadedPattern>io.ayte.utility.discovery.shaded.com.squareup</shadedPattern>
                         </relocation>
                     </relocations>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.openclover</groupId>
+                <artifactId>clover-maven-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
                 </configuration>
             </plugin>
         </plugins>
