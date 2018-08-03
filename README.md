@@ -1,5 +1,10 @@
 # Language Element Discovery
 
+[![Bintray](https://img.shields.io/bintray/v/ayte/maven/discovery.svg?style=flat-square)](https://bintray.com/ayte/maven/discovery)
+[![CircleCI/master](https://img.shields.io/circleci/project/github/ayte-io/java-discovery/master.svg?style=flat-square)](https://circleci.com/gh/ayte-io/workflows/java-discovery/tree/master)
+[![Scrutinizer/master](https://img.shields.io/scrutinizer/g/ayte-io/java-discovery/master.svg?style=flat-square)](https://scrutinizer-ci.com/g/ayte-io/java-discovery/?branch=master)
+[![Code Climate/issues](https://img.shields.io/codeclimate/issues/ayte-io/java-discovery.svg?style=flat-square)](https://codeclimate.com/github/ayte-io/java-discovery)
+
 ## Motivation and problem solving
 
 Every once in a while end developer needs to find specific classes (or 
@@ -143,6 +148,11 @@ with identically-named parameters, well, then everything is pretty much
 borked and you have to find correct method among those yourself. Same 
 applies for method parameters, since their parent can be quite 
 ambiguous.
+
+## Dev branch state
+
+[![CircleCI/dev](https://img.shields.io/circleci/project/github/ayte-io/java-discovery/dev.svg?style=flat-square)](https://circleci.com/gh/ayte-io/workflows/java-discovery/tree/dev)
+[![Scrutinizer/dev](https://img.shields.io/scrutinizer/g/ayte-io/java-discovery/dev.svg?style=flat-square)](https://scrutinizer-ci.com/g/ayte-io/java-discovery/?branch=dev)
 
 ## Contributing
 

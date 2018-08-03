@@ -1,0 +1,57 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/openjdk:8
+    working_directory: /tmp/workspace
+    steps:
+      - checkout
+      - restore_cache:
+          key: v1-maven-{{ checksum "pom.xml" }}
+      - run: ./mvnw -B clean install -Dmaven.test.skip=true dependency:go-offline allure:install
+      - save_cache:
+          key: v1-maven-{{ checksum "pom.xml" }}
+          paths:
+            - ~/.m2
+            - target/allure/cli
+            - .mvn
+      - run: ./mvnw -B clover:instrument test integration-test -pl '!src/libraries/src/shaded-annotation-processor'
+      - run:
+          command: ./mvnw -B clover:aggregate clover:clover allure:report
+          when: always
+      - store_artifacts:
+          path: target/site
+          destination: Report
+      - persist_to_workspace:
+          root: /tmp/workspace
+          paths:
+            - src
+            - target
+  publish:
+    docker:
+      - image: circleci/openjdk:8-node-browsers
+    working_directory: /tmp/workspace
+    steps:
+      - checkout
+      - restore_cache:
+          key: v1-maven-{{ checksum "pom.xml" }}
+      - attach_workspace:
+          at: /tmp/workspace
+      - run: ./mvnw -s .circleci/settings.xml -Dmaven.test.skip=true deploy -pl src/libraries/src/api
+      - run: ./mvnw -s .circleci/settings.xml -Dmaven.test.skip=true deploy -pl src/libraries/src/annotation-processor
+      - run: ./mvnw -s .circleci/settings.xml -Dmaven.test.skip=true deploy -pl src/libraries/src/shaded-annotation-processor
+workflows:
+  version: 2
+  default:
+    jobs:
+      - build
+      - publish:
+          context: ayte:bintray
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - dev
+            tags:
+              only: /\d+\.\d+\.\d+/
